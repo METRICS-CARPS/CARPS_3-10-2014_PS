@@ -1,0 +1,220 @@
+---
+title: "CARPS Reproducibility Report"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+#### Article ID: CARPS_3-10-2014_PS
+#### Pilot 1: Gobi
+#### Co-pilot: Marc
+#### Start date: 10/26/2017
+#### End date: 11/5/2017 
+
+-------
+
+#### Methods summary: 
+To test how exploration is affected by reward frequency and control, the researchers recruited 120 college students. The students were either in the with-control group, in which case outcome depended on their actions, or the yoked group, in which case outcome depended on the action of a with-control participant that they were paired with. Participants were shown a 12x10 grid of keys and asked to press keys for 100 trials (divided into 4 blocks, 25 trials each). Keys they already pressed (old keys) turned gray. Partipants paid 1 point to explore/press new keys (exploration cost) and 0 points to press old keys. Upon pressing a new key, participants in the with-control condition received 11 points with probability p and 0 points with probability 1-p when pressing new keys. Note, they still had to pay their "new key press" cost of 1 point. Participants in the yoked condition received whatever the with-control participant they were yoked to received on that trial during the first 50 trials but actually had control in the second 50 trials (i.e. they were treated like those in the with-control group). The study was 2 conditions (with-control / yoked) x 3 reward frequencies (p=0.1 extremely low, p=0.2 moderate, p=1 extremely high) and so the 120 participants were divided into 6 groups of 20 each. In such a setup, yoked participants would receive 11 points if they did not explore and 10 points if they did explore, on a trial when the with-control participant they were yoked to received a reward for exploring. A direct measure of perceived controllability was found by surveying participants of how much they felt in control of their outcomes in the first and second half of the trials. An indirect measure of perceived controllability was found by having all participants predict (over the course of 16 trials picked randomly (but ensuring first/second half samples were evenly picked) from the 100 trials completed by another player) the probability of four possible outcomes (explore+reward, no-explore+reward, explore+no-reward, no-explore+no-reward) for trial t+1. Low variance in predicted probabilities indicated that the participants thought that the other player does not have control over their outcomes, so they predicted the same probability every time, whereas high variance in predicted probabilities indicated that they do have control.
+
+------
+
+#### Target outcomes: 
+
+> The top row of Figure 2 presents exploration rates (the percentage of trials in which participants tried new keys) across 4 blocks of 25 trials each. To further examine exploration rates, we conducted a 4 (block: 1, 2, 3, 4) × 3 (reward frequency: extremely low, moderate, extremely high) × 2 (control group: with-control, yoked) repeated measures analysis of variance (ANOVA), which revealed a significant three-way interaction, F(6, 342) = 3.35, p < .01, ηp 2 = .05. A post hoc Tukey’s test of exploration rates in the two control groups revealed that when the frequency of rewards from exploration was extremely low (p = .1), exploration rates decreased from about 70% in the first block to approximately 40% in the last block for both the with-control (p < .01) and the yoked (p < .01) groups. However, when reward frequency was moderate (p = .2), with-control participants continued to explore in about 70% of the trials, whereas yoked participants reduced their exploration rates to approximately 40%. This difference between the groups was evident in the second block (p < .01) and remained after yoked participants regained control (p < .01 and p = .09 for the third and fourth blocks, respectively). Finally, when reward frequency was extremely high (p = 1), yoked participants explored less than with-control participants in the second block (p < .01); however, this gap disappeared immediately after yoked participants regained control (ps > .9 for the third and fourth blocks). In summary, the classic learned-helplessness pattern was observed only when the reward frequency was moderate.
+
+------
+
+[The chunk below sets up some formatting options for the R Markdown document]
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+## Step 1: Load packages
+
+[Some useful packages are being loaded below. You can add any additional ones you might need too.]
+
+```{r}
+library(tidyverse) # for data munging
+library(knitr) # for kable table formating
+library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
+library(readxl) # import excel files
+library(CARPSreports) # custom report functions
+library(dplyr)
+library(car)
+```
+
+## Step 2: Load data
+
+```{r}
+expldt = read_excel('data/LH_model_predictions_and_experimental_results.xlsx') %>% rename("p_reward" = "P(reward)", "yoked" = "Yoked (0=with control)", "1"="Exploration Rates_Block1", "2"="Exploration Rates_Block2", "3"="Exploration Rates_Block3", "4"="Exploration Rates_Block4")
+expldt$yoked <- as.factor(expldt$yoked)
+expldt$p_reward <- as.factor(expldt$p_reward)
+```
+
+## Step 3: Tidy data
+
+```{r}
+expldt_tidy = expldt %>% gather(block, block_exploration, "1":"4") 
+expldt_tidy = na.omit(expldt_tidy)
+expldt_tidy$block <- as.factor(expldt_tidy$block)
+```
+
+## Step 4: Run analysis
+
+### Descriptive statistics
+
+```{r}
+summary(na.omit(expldt))
+```
+With Control, Extremely Low => Exploration Rate [CONSISTENT with FIG 2 (TOP ROW)] 
+```{r}
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="0.1" & expldt_tidy$block == "1",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="0.1" & expldt_tidy$block == "2",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="0.1" & expldt_tidy$block == "3",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="0.1" & expldt_tidy$block == "4",]$block_exploration)
+```
+Yoked, Extremely Low => Exploration Rate [CONSISTENT with FIG 2] 
+```{r}
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="0.1" & expldt_tidy$block == "1",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="0.1" & expldt_tidy$block == "2",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="0.1" & expldt_tidy$block == "3",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="0.1" & expldt_tidy$block == "4",]$block_exploration)
+```
+With Control, Moderate => Exploration Rate [CONSISTENT with FIG 2] 
+```{r}
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="0.2" & expldt_tidy$block == "1",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="0.2" & expldt_tidy$block == "2",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="0.2" & expldt_tidy$block == "3",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="0.2" & expldt_tidy$block == "4",]$block_exploration)
+```
+Yoked, Moderate => Exploration Rate [CONSISTENT with FIG 2] 
+```{r}
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="0.2" & expldt_tidy$block == "1",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="0.2" & expldt_tidy$block == "2",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="0.2" & expldt_tidy$block == "3",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="0.2" & expldt_tidy$block == "4",]$block_exploration)
+```
+With Control, Extremely High => Exploration Rate [CONSISTENT with FIG 2]
+```{r}
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="1" & expldt_tidy$block == "1",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="1" & expldt_tidy$block == "2",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="1" & expldt_tidy$block == "3",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="1" & expldt_tidy$block == "4",]$block_exploration)
+```
+Yoked, Extremely High => Exploration Rate [CONSISTENT with FIG 2] 
+```{r}
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="1" & expldt_tidy$block == "1",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="1" & expldt_tidy$block == "2",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="1" & expldt_tidy$block == "3",]$block_exploration)
+summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="1" & expldt_tidy$block == "4",]$block_exploration)
+```
+
+### Inferential statistics
+> To further examine exploration rates, we conducted a 4 (block: 1, 2, 3, 4) × 3 (reward frequency: extremely low, moderate, extremely high) × 2 (control group: with-control, yoked) repeated measures analysis of variance (ANOVA), which revealed a significant three-way interaction, F(6, 342) = 3.35, p < .01, ηp 2 = .05.
+
+(thanks https://stats.stackexchange.com/questions/62756/2x2x5-repeated-measures-anova-significant-3-way-interaction, https://www.statmethods.net/stats/anova.html)
+
+Note I researched https://www.statmethods.net/stats/anova.html (within subjects example),  https://www.uvm.edu/~dhowell/StatPages/R/RepeatedMeasuresAnovaR.html, https://www.r-bloggers.com/two-way-anova-with-repeated-measures/, http://personality-project.org/r/r.guide/r.anova.html, https://gribblelab.wordpress.com/2009/03/09/repeated-measures-anova-using-r/ and our within-subjects anova implementation in R is consistent with the implementation presented in these articles. I also researched why our df2 is not matching theirs and it does not seem like 342 makes sense according to http://www.rondotsch.nl/degrees-of-freedom/. More details about this process of me trying to match their df2 value (including calculations) using the within-subjects formula is in an email correspondence between me (gdasu) and Tom Hardwicke titled "Having Trouble with Getting Same results on CARPS_3-10-2014_PS (Learned Helplessness)".  
+```{r}
+expldt.aov <- aov(block_exploration ~ (block*p_reward*yoked) + Error(Subject/(block)) + (p_reward*yoked), data=expldt_tidy)
+#expldt.aov
+summary(expldt.aov) 
+#Anova(expldt.aov)
+```
+We got F(6, 452) = 1.281, p > 0.1 [NOT CONSISTENT].
+
+As per Tom's advice: "For reporting p < situations, you cant use he compare values function, just eyeball it and see if the obtained p is below the limit specified." HENCE WE REPORT the following. We follow this advice going forward since exact p-vals were not reported to us, only limits.
+
+MAJOR NUMERICAL ERROR. The reported value (p < .01) and the obtained value (p=0.264) differed. NB obtained value was rounded to 3 decimal places.
+
+Now onto Tukey tests ...
+
+> A post hoc Tukey’s test of exploration rates in the two control groups revealed that when the frequency of rewards from exploration was extremely low (p = .1), exploration rates decreased from about 70% in the first block to approximately 40% in the last block for both the with-control (p < .01) and the yoked (p < .01) groups. 
+
+[TUKEY COMPARING FIRST AND LAST BLOCK]
+
+I read https://www.r-bloggers.com/anova-and-tukeys-test-on-r/ to understand how to do Tukey tests to evaluate differences. In the following examples I select the observations that the authors are considering, run an an anova+tukey to reproduce what they got.
+
+NOTE ACTUAL EXPLORATION RATES UNDER SPECIFIC BLOCK/P_REWARD/CONDITION CONFIGURATIONS WERE ALL CONSISTENT WITH THE ARTICLE AS PER THE DESCRIPTIVE STATISTICS SECTION (we confirmed all Fig 2 row 1 data points), so in the following we ONLY discuss p values of the TUKEY results.
+```{r}
+d_low_yoked = expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="0.1",]
+an_low_yoked <- aov(block_exploration ~ block, data=d_low_yoked)
+TukeyHSD(an_low_yoked, "block") # we got p = .0125 [NOT CONSISTENT]
+```
+MAJOR NUMERICAL ERROR. The reported value (p < .01) and the obtained value (p=0.0125) differed. NB obtained value was rounded to 4 decimal places.
+```{r}
+d_low_withctrl = expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="0.1",]
+an_low_withctrl <- aov(block_exploration ~ block, data=d_low_withctrl)
+TukeyHSD(an_low_withctrl, "block") # we got p = .1056 [NOT CONSISTENT]
+```
+MAJOR NUMERICAL ERROR. The reported value (p < .01) and the obtained value (p=0.1056) differed. NB obtained value was rounded to 4 decimal places.
+
+> However, when reward frequency was moderate (p = .2), with-control participants continued to explore in about 70% of the trials, whereas yoked participants reduced their exploration rates to approximately 40%. This difference between the groups was evident in the second block (p < .01) and remained after yoked participants regained control (p < .01 and p = .09 for the third and fourth blocks, respectively).
+```{r}
+d_mod_block2 = expldt_tidy[expldt_tidy$p_reward=="0.2" & expldt_tidy$block=="2",]
+an_mod_block2 <- aov(block_exploration ~ yoked, data=d_mod_block2)
+TukeyHSD(an_mod_block2, "yoked") # we got p < .01 [CONSISTENT]
+```
+
+MATCH. The reported value (p < .01) and the obtained value (0.0004564) are consistent. NB obtained value was rounded to 7 decimal places.
+
+```{r}
+d_mod_block3 = expldt_tidy[expldt_tidy$p_reward=="0.2" & expldt_tidy$block=="3",]
+an_mod_block3 <- aov(block_exploration ~ yoked, data=d_mod_block3)
+TukeyHSD(an_mod_block3, "yoked") # we got p < .01 [CONSISTENT]
+```
+
+MATCH. The reported value (p < .01) and the obtained value (0.0009524) are consistent. NB obtained value was rounded to 7 decimal places.
+
+```{r}
+d_mod_block4 = expldt_tidy[expldt_tidy$p_reward=="0.2" & expldt_tidy$block=="4",]
+an_mod_block4 <- aov(block_exploration ~ yoked, data=d_mod_block4) 
+TukeyHSD(an_mod_block4, "yoked") # we got p = .019 [NOT CONSISTENT]
+compareValues(reportedValue = .09, obtainedValue = .019, isP = T) # GOT TO RUN COMPARE HERE SINCE GIVEN EXACT PVAL
+```
+
+> Finally, when reward frequency was extremely high (p = 1), yoked participants explored less than with-control participants in the second block (p < .01); however, this gap disappeared immediately after yoked participants regained control (ps > .9 for the third and fourth blocks). In summary, the classic learned-helplessness pattern was observed only when the reward frequency was moderate.
+
+```{r}
+d_high_block2 = expldt_tidy[expldt_tidy$p_reward=="1" & expldt_tidy$block=="2",]
+an_high_block2 <- aov(block_exploration ~ yoked, data=d_high_block2)
+TukeyHSD(an_high_block2, "yoked") # we got p < .01 [CONSISTENT]
+```
+MATCH. The reported value (p < .01) and the obtained value (3.67e-05) are consistent. NB obtained value was rounded to 1 decimal places.
+```{r}
+d_high_block3 = expldt_tidy[expldt_tidy$p_reward=="1" & expldt_tidy$block=="3",]
+an_high_block3 <- aov(block_exploration ~ yoked, data=d_high_block3)
+TukeyHSD(an_high_block3, "yoked") # we got p < .01 [NOT CONSISTENT]
+```
+MAJOR NUMERICAL ERROR. The reported value (p > .9) and the obtained value (4.59e-05) are not consistent. NB obtained value was rounded to 7 decimal places.
+```{r}
+d_high_block4 = expldt_tidy[expldt_tidy$p_reward=="1" & expldt_tidy$block=="4",]
+an_high_block4 <- aov(block_exploration ~ yoked, data=d_high_block4)
+TukeyHSD(an_high_block4, "yoked") # we got p = .19 [NOT CONSISTENT]
+```
+MAJOR NUMERICAL ERROR. The reported value (p > .9) and the obtained value (0.1944) are not consistent. NB obtained value was rounded to 4 decimal places.
+```
+
+## Step 5: Conclusion
+
+```{r}
+carpsReport(Report_Type = "pilot", 
+           Article_ID = "CARPS_3-10-2014_PS", 
+           Insufficient_Information_Errors = 0, 
+           Decision_Errors = 1, 
+           Major_Numerical_Errors = 6, 
+           Time_to_Complete = 720, 
+           Author_Assistance = FALSE) 
+```
+
+Verbal Summary: 
+
+This reproducability check was a failure. First of all, the descriptive statistics of the mean exploration rates across the different blocks/reward-probabilities/conditions matched up perfectly with Fig. 2 of the paper, so the data was not the issue. We had 120 participants just like the paper did after clearing out NA data. We were not able to get the same "F(6, 342) = 3.35 p < .01" despite numerous efforts and significant research into implementation of repeated measures (within subjects) ANOVA in R. Note, we accounted for the fact that the block factor was within subjects but the p_reward and yoked boolean were between subjects. A reading on degrees of freedom for ANOVAs (including ANOVAs with within-subject factors) provided some insight into how to calculate the df2 value we'd expect for such a 4x3x2 cell experiment but df2=342 is not consistent with the calculations. It would be important to reconcile differences with the authors first about why df2=342 theoretically. Then it would be important to compare our anova call in R with the authors to understand why our setup which rightly treats blocks as within-subjects and yoked/p_reward as between-subjects is not achieving the same value as their setup. A likely cause, which I mentioned in an email correspondence with Tom Hardwicke, might be that the authors used the following formula to calculate df2: (120 participants *4 blocks - 1) - (120 participants -1) - (4 blocks - 1 [subtract one because within subjects])*(3 reward_frequencies)(2 conditions) = 342 and built an ANOVA on top of such a setup, but it still does not make sense how such an ANOVA setup can be done and why that should be done rather than the standard mixed within/between setup outlined in the articles I have linked above. We were only able to match 3 out of 8 of the Tukey tests and that too only to the extent that we achieved p values within the limits the authors provided. The first step would be to ask authors for the exact p values they got rather than just upper limits. The next step would be to understand whether they segmented data how we did based on their writing. We interpreted their language to mean that they selected observations in particular cells and compared them using a post-hoc one-way-anova+tukey-test. We interpreted this based on a blog about Tukey tests linked above. Clarifying exactly what portion of the data they used for the Tukey tests would be an important step as the likely cause of the discrepancies may be in communication of which data is to be used.
+
+[This function will output information about the package versions used in this report:]
+
+```{r session_info, include=TRUE, echo=TRUE, results='markup'}
+devtools::session_info()
+```
