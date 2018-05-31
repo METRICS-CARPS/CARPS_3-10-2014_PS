@@ -6,11 +6,17 @@ output:
     toc_float: true
 ---
 
-#### Article ID: CARPS_3-10-2014_PS
-#### Pilot 1: Gobi
-#### Co-pilot: Marc
-#### Start date: 10/26/2017
-#### End date: 11/5/2017 
+```{r}
+articleID <- "3-10-2014_PS" # insert the article ID code here e.g., "10-3-2015_PS"
+reportType <- 'pilot'
+pilotNames <- "Gobi, Marc" # insert the pilot's name here e.g., "Tom Hardwicke". If there are multiple pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+copilotNames <- "" # insert the co-pilot's name here e.g., "Michael Frank". If there are multiple co-pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+pilotTTC <- 720 # insert the pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+copilotTTC <- NA # insert the co- pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+pilotStartDate <- as.Date("10/26/2017", format = "%m/%d/%y") # insert the pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+copilotStartDate <- as.Date("", format = "%m/%d/%y") # insert the co-pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+completionDate <- as.Date("", format = "%m/%d/%y") # copilot insert the date of final report completion (after any necessary rounds of author assistance) in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+```
 
 -------
 
@@ -43,6 +49,11 @@ library(readxl) # import excel files
 library(CARPSreports) # custom report functions
 library(dplyr)
 library(car)
+```
+
+```{r}
+# Prepare report object. This will be updated automatically by the reproCheck function each time values are compared.
+reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)
 ```
 
 ## Step 2: Load data
@@ -117,17 +128,21 @@ summary(expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="1" & expldt_ti
 (thanks https://stats.stackexchange.com/questions/62756/2x2x5-repeated-measures-anova-significant-3-way-interaction, https://www.statmethods.net/stats/anova.html)
 
 Note I researched https://www.statmethods.net/stats/anova.html (within subjects example),  https://www.uvm.edu/~dhowell/StatPages/R/RepeatedMeasuresAnovaR.html, https://www.r-bloggers.com/two-way-anova-with-repeated-measures/, http://personality-project.org/r/r.guide/r.anova.html, https://gribblelab.wordpress.com/2009/03/09/repeated-measures-anova-using-r/ and our within-subjects anova implementation in R is consistent with the implementation presented in these articles. I also researched why our df2 is not matching theirs and it does not seem like 342 makes sense according to http://www.rondotsch.nl/degrees-of-freedom/. More details about this process of me trying to match their df2 value (including calculations) using the within-subjects formula is in an email correspondence between me (gdasu) and Tom Hardwicke titled "Having Trouble with Getting Same results on CARPS_3-10-2014_PS (Learned Helplessness)".  
+
 ```{r}
 expldt.aov <- aov(block_exploration ~ (block*p_reward*yoked) + Error(Subject/(block)) + (p_reward*yoked), data=expldt_tidy)
 #expldt.aov
 summary(expldt.aov) 
 #Anova(expldt.aov)
 ```
+
 We got F(6, 452) = 1.281, p > 0.1 [NOT CONSISTENT].
 
-As per Tom's advice: "For reporting p < situations, you cant use he compare values function, just eyeball it and see if the obtained p is below the limit specified." HENCE WE REPORT the following. We follow this advice going forward since exact p-vals were not reported to us, only limits.
+As per Tom's advice: "For reporting p < situations, just eyeball it and see if the obtained p is below the limit specified." HENCE WE REPORT the following. We follow this advice going forward since exact p-vals were not reported to us, only limits.
 
-MAJOR NUMERICAL ERROR. The reported value (p < .01) and the obtained value (p=0.264) differed. NB obtained value was rounded to 3 decimal places.
+```{r}
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = 0.264, valueType = 'p', eyeballCheck = FALSE)
+```
 
 Now onto Tukey tests ...
 
@@ -143,22 +158,32 @@ d_low_yoked = expldt_tidy[expldt_tidy$yoked==0 & expldt_tidy$p_reward=="0.1",]
 an_low_yoked <- aov(block_exploration ~ block, data=d_low_yoked)
 TukeyHSD(an_low_yoked, "block") # we got p = .0125 [NOT CONSISTENT]
 ```
-MAJOR NUMERICAL ERROR. The reported value (p < .01) and the obtained value (p=0.0125) differed. NB obtained value was rounded to 4 decimal places.
+
+```{r}
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = 0.0125, valueType = 'p', eyeballCheck = FALSE)
+```
+
 ```{r}
 d_low_withctrl = expldt_tidy[expldt_tidy$yoked==1 & expldt_tidy$p_reward=="0.1",]
 an_low_withctrl <- aov(block_exploration ~ block, data=d_low_withctrl)
 TukeyHSD(an_low_withctrl, "block") # we got p = .1056 [NOT CONSISTENT]
 ```
-MAJOR NUMERICAL ERROR. The reported value (p < .01) and the obtained value (p=0.1056) differed. NB obtained value was rounded to 4 decimal places.
+
+```{r}
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = 0.1056, valueType = 'p', eyeballCheck = FALSE)
+```
 
 > However, when reward frequency was moderate (p = .2), with-control participants continued to explore in about 70% of the trials, whereas yoked participants reduced their exploration rates to approximately 40%. This difference between the groups was evident in the second block (p < .01) and remained after yoked participants regained control (p < .01 and p = .09 for the third and fourth blocks, respectively).
+
 ```{r}
 d_mod_block2 = expldt_tidy[expldt_tidy$p_reward=="0.2" & expldt_tidy$block=="2",]
 an_mod_block2 <- aov(block_exploration ~ yoked, data=d_mod_block2)
 TukeyHSD(an_mod_block2, "yoked") # we got p < .01 [CONSISTENT]
 ```
 
-MATCH. The reported value (p < .01) and the obtained value (0.0004564) are consistent. NB obtained value was rounded to 7 decimal places.
+```{r}
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = 0.0004564, valueType = 'p', eyeballCheck =  TRUE)
+```
 
 ```{r}
 d_mod_block3 = expldt_tidy[expldt_tidy$p_reward=="0.2" & expldt_tidy$block=="3",]
@@ -166,13 +191,16 @@ an_mod_block3 <- aov(block_exploration ~ yoked, data=d_mod_block3)
 TukeyHSD(an_mod_block3, "yoked") # we got p < .01 [CONSISTENT]
 ```
 
-MATCH. The reported value (p < .01) and the obtained value (0.0009524) are consistent. NB obtained value was rounded to 7 decimal places.
+```{r}
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = 0.0009524, valueType = 'p', eyeballCheck = TRUE)
+```
 
 ```{r}
 d_mod_block4 = expldt_tidy[expldt_tidy$p_reward=="0.2" & expldt_tidy$block=="4",]
 an_mod_block4 <- aov(block_exploration ~ yoked, data=d_mod_block4) 
 TukeyHSD(an_mod_block4, "yoked") # we got p = .019 [NOT CONSISTENT]
-compareValues(reportedValue = .09, obtainedValue = .019, isP = T) # GOT TO RUN COMPARE HERE SINCE GIVEN EXACT PVAL
+
+reportObject <- reproCheck(reportedValue = ".09", obtainedValue = 0.019, valueType = 'p')
 ```
 
 > Finally, when reward frequency was extremely high (p = 1), yoked participants explored less than with-control participants in the second block (p < .01); however, this gap disappeared immediately after yoked participants regained control (ps > .9 for the third and fourth blocks). In summary, the classic learned-helplessness pattern was observed only when the reward frequency was moderate.
@@ -182,38 +210,89 @@ d_high_block2 = expldt_tidy[expldt_tidy$p_reward=="1" & expldt_tidy$block=="2",]
 an_high_block2 <- aov(block_exploration ~ yoked, data=d_high_block2)
 TukeyHSD(an_high_block2, "yoked") # we got p < .01 [CONSISTENT]
 ```
-MATCH. The reported value (p < .01) and the obtained value (3.67e-05) are consistent. NB obtained value was rounded to 1 decimal places.
+
+```{r}
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = 3.67e-05, valueType = 'p', eyeballCheck = TRUE)
+```
+
 ```{r}
 d_high_block3 = expldt_tidy[expldt_tidy$p_reward=="1" & expldt_tidy$block=="3",]
 an_high_block3 <- aov(block_exploration ~ yoked, data=d_high_block3)
 TukeyHSD(an_high_block3, "yoked") # we got p < .01 [NOT CONSISTENT]
 ```
-MAJOR NUMERICAL ERROR. The reported value (p > .9) and the obtained value (4.59e-05) are not consistent. NB obtained value was rounded to 7 decimal places.
+
+```{r}
+reportObject <- reproCheck(reportedValue = "<.9", obtainedValue = 4.59e-05, valueType = 'p', eyeballCheck = FALSE)
+```
+
 ```{r}
 d_high_block4 = expldt_tidy[expldt_tidy$p_reward=="1" & expldt_tidy$block=="4",]
 an_high_block4 <- aov(block_exploration ~ yoked, data=d_high_block4)
 TukeyHSD(an_high_block4, "yoked") # we got p = .19 [NOT CONSISTENT]
 ```
-MAJOR NUMERICAL ERROR. The reported value (p > .9) and the obtained value (0.1944) are not consistent. NB obtained value was rounded to 4 decimal places.
+
+```{r}
+reportObject <- reproCheck(reportedValue = "<.9", obtainedValue = 0.1944, valueType = 'p', eyeballCheck = FALSE)
 ```
 
 ## Step 5: Conclusion
-
-```{r}
-carpsReport(Report_Type = "pilot", 
-           Article_ID = "CARPS_3-10-2014_PS", 
-           Insufficient_Information_Errors = 0, 
-           Decision_Errors = 1, 
-           Major_Numerical_Errors = 6, 
-           Time_to_Complete = 720, 
-           Author_Assistance = FALSE) 
-```
 
 Verbal Summary: 
 
 This reproducability check was a failure. First of all, the descriptive statistics of the mean exploration rates across the different blocks/reward-probabilities/conditions matched up perfectly with Fig. 2 of the paper, so the data was not the issue. We had 120 participants just like the paper did after clearing out NA data. We were not able to get the same "F(6, 342) = 3.35 p < .01" despite numerous efforts and significant research into implementation of repeated measures (within subjects) ANOVA in R. Note, we accounted for the fact that the block factor was within subjects but the p_reward and yoked boolean were between subjects. A reading on degrees of freedom for ANOVAs (including ANOVAs with within-subject factors) provided some insight into how to calculate the df2 value we'd expect for such a 4x3x2 cell experiment but df2=342 is not consistent with the calculations. It would be important to reconcile differences with the authors first about why df2=342 theoretically. Then it would be important to compare our anova call in R with the authors to understand why our setup which rightly treats blocks as within-subjects and yoked/p_reward as between-subjects is not achieving the same value as their setup. A likely cause, which I mentioned in an email correspondence with Tom Hardwicke, might be that the authors used the following formula to calculate df2: (120 participants *4 blocks - 1) - (120 participants -1) - (4 blocks - 1 [subtract one because within subjects])*(3 reward_frequencies)(2 conditions) = 342 and built an ANOVA on top of such a setup, but it still does not make sense how such an ANOVA setup can be done and why that should be done rather than the standard mixed within/between setup outlined in the articles I have linked above. We were only able to match 3 out of 8 of the Tukey tests and that too only to the extent that we achieved p values within the limits the authors provided. The first step would be to ask authors for the exact p values they got rather than just upper limits. The next step would be to understand whether they segmented data how we did based on their writing. We interpreted their language to mean that they selected observations in particular cells and compared them using a post-hoc one-way-anova+tukey-test. We interpreted this based on a blog about Tukey tests linked above. Clarifying exactly what portion of the data they used for the Tukey tests would be an important step as the likely cause of the discrepancies may be in communication of which data is to be used.
 
-[This function will output information about the package versions used in this report:]
+```{r}
+Author_Assistance = FALSE # was author assistance provided? (if so, enter TRUE)
+
+Insufficient_Information_Errors <- 0 # how many discrete insufficient information issues did you encounter?
+
+# Assess the causal locus (discrete reproducibility issues) of any reproducibility errors. Note that there doesn't necessarily have to be a one-to-one correspondance between discrete reproducibility issues and reproducibility errors. For example, it could be that the original article neglects to mention that a Greenhouse-Geisser correct was applied to ANOVA outcomes. This might result in multiple reproducibility errors, but there is a single causal locus (discrete reproducibility issue).
+
+locus_typo <- NA # how many discrete issues did you encounter that related to typographical errors?
+locus_specification <- NA # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
+locus_analysis <- NA # how many discrete issues did you encounter that related to errors in the authors' original analyses?
+locus_data <- NA # how many discrete issues did you encounter that related to errors in the data files shared by the authors?
+locus_unidentified <- NA # how many discrete issues were there for which you could not identify the cause
+
+Affects_Conclusion <- NA # Do any reproducibility issues encounter appear to affect the conclusions made in the original article? This is a subjective judgement, but you should taking into account multiple factors, such as the presence/absence of decision errors, the number of target outcomes that could not be reproduced, the type of outcomes that could or could not be reproduced, the difference in magnitude of effect sizes, and the predictions of the specific hypothesis under scrutiny.
+```
+
+```{r}
+reportObject <- reportObject %>%
+  filter(dummyRow == FALSE) %>% # remove the dummy row
+  select(-dummyRow) %>% # remove dummy row designation
+  mutate(articleID = articleID) %>% # add the articleID 
+  select(articleID, everything()) # make articleID first column
+
+# decide on final outcome
+if(any(reportObject$comparisonOutcome != "MATCH") | Insufficient_Information_Errors > 0){
+  finalOutcome <- "Failure without author assistance"
+  if(Author_Assistance == T){
+    finalOutcome <- "Failure despite author assistance"
+  }
+}else{
+  finalOutcome <- "Success without author assistance"
+  if(Author_Assistance == T){
+    finalOutcome <- "Success with author assistance"
+  }
+}
+
+# collate report extra details
+reportExtras <- data.frame(articleID, pilotNames, copilotNames, pilotTTC, copilotTTC, pilotStartDate, copilotStartDate, completionDate, Author_Assistance, finalOutcome, Insufficient_Information_Errors, locus_typo, locus_specification, locus_analysis, locus_data, locus_unidentified)
+
+# save report objects
+if(reportType == "pilot"){
+  write_csv(reportObject, "pilotReportDetailed.csv")
+  write_csv(reportExtras, "pilotReportExtras.csv")
+}
+
+if(reportType == "final"){
+  write_csv(reportObject, "finalReportDetailed.csv")
+  write_csv(reportExtras, "finalReportExtras.csv")
+}
+```
+
+# Session information
 
 ```{r session_info, include=TRUE, echo=TRUE, results='markup'}
 devtools::session_info()

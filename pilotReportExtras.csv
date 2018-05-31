@@ -1,0 +1,2 @@
+articleID,pilotNames,copilotNames,pilotTTC,copilotTTC,pilotStartDate,copilotStartDate,completionDate,Author_Assistance,finalOutcome,Insufficient_Information_Errors,locus_typo,locus_specification,locus_analysis,locus_data,locus_unidentified
+3-10-2014_PS,"Gobi, Marc",,720,NA,2020-10-26,NA,NA,FALSE,Failure without author assistance,0,NA,NA,NA,NA,NA
