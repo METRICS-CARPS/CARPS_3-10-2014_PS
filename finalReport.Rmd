@@ -1,0 +1,421 @@
+---
+title: "CARPS Reproducibility Report"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r}
+articleID <- "3-10-2014_PS" # insert the article ID code here e.g., "10-3-2015_PS"
+reportType <- 'pilot'
+pilotNames <- "Gobi, Marc" # insert the pilot's name here e.g., "Tom Hardwicke". If there are multiple pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+copilotNames <- "Kyle MacDonald" # insert the co-pilot's name here e.g., "Michael Frank". If there are multiple co-pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+pilotTTC <- 720 # insert the pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+copilotTTC <- 100 # insert the co- pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+pilotStartDate <- as.Date("10/26/2017", format = "%m/%d/%y") # insert the pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+copilotStartDate <- as.Date("6/13/2018", format = "%m/%d/%y") # insert the co-pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+completionDate <- as.Date("", format = "%m/%d/%y") # copilot insert the date of final report completion (after any necessary rounds of author assistance) in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+```
+
+-------
+
+#### Methods summary: 
+
+To test how exploration is affected by reward frequency and control, the researchers recruited 120 college students. The students were either in the with-control group, in which case outcome depended on their actions, or the yoked group, in which case outcome depended on the action of a with-control participant that they were paired with. 
+
+Participants were shown a 12x10 grid of keys and asked to press keys for 100 trials (divided into 4 blocks, 25 trials each). Keys they already pressed (old keys) turned gray. Partipants paid 1 point to explore/press new keys (exploration cost) and 0 points to press old keys. Upon pressing a new key, participants in the with-control condition received 11 points with probability p and 0 points with probability 1-p when pressing new keys. Note, they still had to pay their "new key press" cost of 1 point. 
+
+Participants in the yoked condition received whatever the with-control participant they were yoked to received on that trial during the first 50 trials but actually had control in the second 50 trials (i.e. they were treated like those in the with-control group). The study was 2 conditions (with-control / yoked) x 3 reward frequencies (p=0.1 extremely low, p=0.2 moderate, p=1 extremely high) and so the 120 participants were divided into 6 groups of 20 each. In such a setup, yoked participants would receive 11 points if they did not explore and 10 points if they did explore, on a trial when the with-control participant they were yoked to received a reward for exploring. 
+
+A direct measure of perceived controllability was found by surveying participants of how much they felt in control of their outcomes in the first and second half of the trials. An indirect measure of perceived controllability was found by having all participants predict (over the course of 16 trials picked randomly (but ensuring first/second half samples were evenly picked) from the 100 trials completed by another player) the probability of four possible outcomes (explore+reward, no-explore+reward, explore+no-reward, no-explore+no-reward) for trial t+1. Low variance in predicted probabilities indicated that the participants thought that the other player does not have control over their outcomes, so they predicted the same probability every time, whereas high variance in predicted probabilities indicated that they do have control.
+
+------
+
+#### Target outcomes: 
+
+> The top row of Figure 2 presents exploration rates (the percentage of trials in which participants tried new keys) across 4 blocks of 25 trials each. To further examine exploration rates, we conducted a 4 (block: 1, 2, 3, 4) × 3 (reward frequency: extremely low, moderate, extremely high) × 2 (control group: with-control, yoked) repeated measures analysis of variance (ANOVA), which revealed a significant three-way interaction, F(6, 342) = 3.35, p < .01, ηp 2 = .05. A post hoc Tukey’s test of exploration rates in the two control groups revealed that when the frequency of rewards from exploration was extremely low (p = .1), exploration rates decreased from about 70% in the first block to approximately 40% in the last block for both the with-control (p < .01) and the yoked (p < .01) groups. However, when reward frequency was moderate (p = .2), with-control participants continued to explore in about 70% of the trials, whereas yoked participants reduced their exploration rates to approximately 40%. This difference between the groups was evident in the second block (p < .01) and remained after yoked participants regained control (p < .01 and p = .09 for the third and fourth blocks, respectively). Finally, when reward frequency was extremely high (p = 1), yoked participants explored less than with-control participants in the second block (p < .01); however, this gap disappeared immediately after yoked participants regained control (ps > .9 for the third and fourth blocks). In summary, the classic learned-helplessness pattern was observed only when the reward frequency was moderate.
+
+Here is the top row of Figure 2. Note that error bars represent represent ±1 SEM. And that points show the mean percentage of trials on which participants tried new keys.
+
+![](fig2_top_row.png)
+
+------
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+## Step 1: Load packages
+
+```{r}
+library(tidyverse) # for data munging
+library(knitr) # for kable table formating
+library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
+library(readxl) # import excel files
+library(CARPSreports) # custom report functions
+library(car)
+```
+
+```{r}
+# Prepare report object. This will be updated automatically by the reproCheck function each time values are compared.
+reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)
+```
+
+## Step 2: Load data
+
+```{r}
+expldt = read_excel('data/LH_model_predictions_and_experimental_results.xlsx', 
+                    col_names = TRUE) %>% 
+  rename("p_reward" = "P(reward)", 
+         "yoked" = "Yoked (0=with control)", 
+         "1"="Exploration Rates_Block1", 
+         "2"="Exploration Rates_Block2", 
+         "3"="Exploration Rates_Block3", 
+         "4"="Exploration Rates_Block4")
+```
+
+## Step 3: Tidy data
+
+```{r}
+expldt_tidy = expldt %>% gather(block, block_exploration, "1":"4") 
+expldt_tidy = na.omit(expldt_tidy)
+```
+
+Change 1/0s to meaningful condition names.
+
+```{r}
+expldt_tidy <- expldt_tidy %>%
+  mutate(yoked_condition = ifelse(yoked == 0, "with_control", "yoked"))
+```
+
+Make sure all variables are coded as factors.
+
+```{r}
+expldt_tidy <- expldt_tidy %>% 
+  mutate(block_factor = factor(block),
+         block = as.numeric(block),
+         p_reward_factor = factor(p_reward),
+         yoked_condition = factor(yoked_condition)) 
+```
+
+
+Check how many participants we have in each condition. From the Participants section, 
+
+> One hundred twenty Technion students (52 female, 68 male; average age = 24 years).
+
+From the results section,
+
+> This resulted in a 3 (reward frequency) × 2 (control group) between-participants design that yielded six groups of 20 participants each
+
+From footnote 3, 
+
+> The number of participants in each group was determined a priori following previous studies that used a similar paradigm. No observations were excluded.
+
+```{r}
+expldt_tidy %>% 
+  distinct(Subject, yoked_condition, p_reward) %>% 
+  count(yoked_condition, p_reward) %>% 
+  kable()
+```
+
+We can reproduce the number of participants in each condition and reward freqency condition. 
+
+## Step 4: Run analysis
+
+### Descriptive statistics
+
+```{r}
+ms <- expldt_tidy %>% 
+  group_by(yoked_condition, p_reward, block) %>% 
+  summarise(m = mean(block_exploration),
+            stdev = sd(block_exploration),
+            n = n(), 
+            sem = stdev / sqrt(n)) %>% 
+  mutate_if(is.numeric, round, digits = 3) 
+
+ms %>% kable()
+```
+
+Try to reproduce their key plot. 
+
+```{r}
+ms %>% 
+  ggplot(aes(x = block, y = m, color = yoked_condition)) +
+  geom_line(aes(group = yoked_condition), size = 1) +
+  geom_pointrange(aes(ymin = m - sem, ymax = m + sem)) +
+  facet_wrap(~p_reward) +
+  lims(y=c(0,1)) +
+  theme_minimal() +
+  theme(legend.position = 'top',
+        panel.border = element_rect(colour = "grey", fill=NA, size=1))
+```
+
+Our plot looks pretty spot on when compared to the top row of Figure 2. 
+
+### Inferential statistics
+
+> To further examine exploration rates, we conducted a 4 (block: 1, 2, 3, 4) × 3 (reward frequency: extremely low, moderate, extremely high) × 2 (control group: with-control, yoked) repeated measures analysis of variance (ANOVA), which revealed a significant three-way interaction, F(6, 342) = 3.35, p < .01, ηp2 = .05.
+
+```{r}
+m1 <- aov(block_exploration ~ factor(yoked_condition) * factor(block) * factor(p_reward) + Error(Subject/block), 
+          data = expldt_tidy)
+summary(m1)
+```
+
+For the key 3-way interaction, we get $F(6, 452) = 1.281, p > 0.1$.
+
+Try to fit with predictors coded as numeric. We tried this because we noticed that the between-group factor labels were numeric (p_reward: 0.2 0.1 1.0 and block: 1, 2, 3, 4).
+
+```{r}
+m1_b <- aov(block_exploration ~ yoked * block * p_reward + Error(Subject/block), 
+          data = expldt_tidy)
+summary(m1_b)
+```
+
+Note that we now get a higher F-value ($F(6, 470) = 3.018, p = 0.08$), but it is still not below the $p < .05$ threshold.
+
+Next, we try to fit with lmer to see if we get any evidence of a 3-way interaction.
+
+```{r}
+m2 <- lme4::lmer(block_exploration ~ yoked_condition * block_factor * p_reward_factor + (Subject|block_factor),
+                 data = expldt_tidy)
+
+summary(m2)
+```
+
+Here are the resources we consulted when trying to reproduce the repeated measures ANOVA:
+
+  * https://stats.stackexchange.com/questions/62756/2x2x5-repeated-measures-anova-significant-3-way-interaction,
+  * https://www.statmethods.net/stats/anova.html
+  * https://www.statmethods.net/stats/anova.html (within subjects example)
+  * https://www.uvm.edu/~dhowell/StatPages/R/RepeatedMeasuresAnovaR.html,
+  * https://www.r-bloggers.com/two-way-anova-with-repeated-measures/,
+  * http://personality-project.org/r/r.guide/r.anova.html,
+  * https://gribblelab.wordpress.com/2009/03/09/repeated-measures-anova-using-r/ 
+  
+Our within-subjects anova implementation in R is consistent with the implementation presented in these articles. We also researched why our df2 is not matching theirs and it does not seem like $DF_2 = 342$ makes sense according to http://www.rondotsch.nl/degrees-of-freedom/. 
+
+Check DFs
+
+```{r}
+m_summary <- summary(m1)$`Error: Within`
+df1 <-  m_summary[[1]]$Df[7] %>% round(3)
+df2 <-  m_summary[[1]]$Df[8] %>% round(3)
+
+reportObject <- reproCheck(reportedValue = "6", obtainedValue = df1, valueType = 'df')
+reportObject <- reproCheck(reportedValue = "342", obtainedValue = df2, valueType = 'p')
+```
+
+Check F value
+
+```{r}
+reportObject <- reproCheck(reportedValue = "6", obtainedValue = df1, valueType = 'df')
+```
+
+Check p values
+
+```{r}
+three_way_p <- m_summary[[1]]$`Pr(>F)`[7] %>% round(3)
+reportObject <- reproCheck(reportedValue = ".01", obtainedValue = three_way_p, valueType = 'p')
+```
+
+Note that this was an "eyeball" check of the $p < .01$ that led to the decision error. 
+
+Next, we try to reproduce the post hoc Tukey tests. From the paper,
+
+> A post hoc Tukey’s test of exploration rates in the two control groups revealed that when the frequency of rewards from exploration was extremely low (p = .1), exploration rates decreased from about 70% in the first block to approximately 40% in the last block for both the with-control (p < .01) and the yoked (p < .01) groups. 
+
+We followed this [resource](https://www.r-bloggers.com/anova-and-tukeys-test-on-r/) to understand how to do Tukey tests to evaluate pairwise differences. We select the observations of interest and run an an anova and a tukey test.
+
+NOTE ACTUAL EXPLORATION RATES UNDER SPECIFIC BLOCK/P_REWARD/CONDITION CONFIGURATIONS WERE ALL CONSISTENT WITH THE ARTICLE AS PER THE DESCRIPTIVE STATISTICS SECTION (we confirmed all Fig 2 row 1 data points), so in the following we ONLY discuss p values of the TUKEY results.
+
+```{r}
+d_low_control <- expldt_tidy %>% filter(yoked_condition == "with_control", p_reward == "0.1")
+an_low_control <- aov(block_exploration ~ block_factor, data = d_low_control)
+low_control_tuk <- TukeyHSD(an_low_control, "block_factor") # we got p = .0125 [NOT CONSISTENT]
+```
+
+Check the p-value comparing block 1 to 4.
+
+```{r}
+low_cont_p <- low_control_tuk$block_factor %>% data.frame() %>% pull(p.adj) %>% .[3] %>% round(4)
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = low_cont_p, valueType = 'p', eyeballCheck = FALSE)
+```
+
+Note that this is also a decision error since the obtained p-value (p = `r low_cont_p`) is above the reported $p < .01$ threshold.
+
+Next we do the same thing but with the yoked condition
+
+```{r}
+d_low_yoked <- expldt_tidy %>% filter(yoked_condition == "yoked", p_reward == "0.1")
+an_low_yoked <- aov(block_exploration ~ block_factor, data = d_low_yoked)
+low_yoked_tuk <- TukeyHSD(an_low_yoked, "block_factor") # we got p = .1056 [NOT CONSISTENT]
+```
+
+Check the p-value comparing block 1 to 4.
+
+```{r}
+low_yoked_p <- low_yoked_tuk$block_factor %>% data.frame() %>% pull(p.adj) %>% .[3] %>% round(4)
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = low_yoked_p, valueType = 'p', eyeballCheck = FALSE)
+```
+
+Next, we do the same analysis but focusing on differences between yoked-control in the moderate reward frequency and block. From the paper,
+
+> However, when reward frequency was moderate (p = .2), with-control participants continued to explore in about 70% of the trials, whereas yoked participants reduced their exploration rates to approximately 40%. This difference between the groups was evident in the second block (p < .01) and remained after yoked participants regained control (p < .01 and p = .09 for the third and fourth blocks, respectively).
+
+```{r}
+d_mod_block2 <- expldt_tidy %>% filter(block == "2", p_reward == "0.2")
+an_mod_block2 <- aov(block_exploration ~ yoked_condition, data = d_mod_block2)
+mod_block_tuk <- TukeyHSD(an_mod_block2, "yoked_condition") # we got p < .01 [CONSISTENT]
+```
+
+Check the p-value.
+
+```{r}
+mod_block_p <- mod_block_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = mod_block_p, valueType = 'p', eyeballCheck =  TRUE)
+```
+
+Next, we do the same analysis but focusing on block 3..
+
+```{r}
+d_mod_block3 <- expldt_tidy %>% filter(block == "3", p_reward == "0.2")
+an_mod_block3 <- aov(block_exploration ~ yoked_condition, data = d_mod_block3)
+mod_block3_tuk <- TukeyHSD(an_mod_block3, "yoked_condition") # we got p < .01 [CONSISTENT]
+```
+
+Check p-value.
+
+```{r}
+mod_block3_p <- mod_block3_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = mod_block3_p, valueType = 'p', eyeballCheck = TRUE)
+```
+
+Same analysis, but with block 4. 
+
+```{r}
+d_mod_block4 <- expldt_tidy %>% filter(block == "4", p_reward == "0.2")
+an_mod_block4 <- aov(block_exploration ~ yoked_condition, data = d_mod_block4) 
+mod_block4_tuk <- TukeyHSD(an_mod_block4, "yoked_condition") # we got p = .019 [NOT CONSISTENT]
+```
+
+Check p-value
+
+```{r}
+mod_block4_p <- mod_block4_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
+reportObject <- reproCheck(reportedValue = ".09", obtainedValue = mod_block4_p, valueType = 'p')
+```
+
+
+The last Tukey tests focused on condition differences when reward frequency was high. From the paper,
+
+> Finally, when reward frequency was extremely high (p = 1), yoked participants explored less than with-control participants in the second block (p < .01); however, this gap disappeared immediately after yoked participants regained control (ps > .9 for the third and fourth blocks). In summary, the classic learned-helplessness pattern was observed only when the reward frequency was moderate.
+
+```{r}
+d_high_block2 <- expldt_tidy %>% filter(block == "2", p_reward == "1")
+an_high_block2 <- aov(block_exploration ~ yoked_condition, data = d_high_block2)
+high_block2_tuk <- TukeyHSD(an_high_block2, "yoked_condition") # we got p < .01 [CONSISTENT]
+```
+
+Check the p-value.
+
+```{r}
+high_block2_p <- high_block2_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = high_block2_p, valueType = 'p', eyeballCheck = TRUE)
+```
+
+Same condition comparison, but with block 3
+
+```{r}
+d_high_block3 <- expldt_tidy %>% filter(block == "3", p_reward == "1")
+an_high_block3 <- aov(block_exploration ~ yoked_condition, data = d_high_block3)
+high_block3_tuk <- TukeyHSD(an_high_block3, "yoked_condition") # we got p < .01 [NOT CONSISTENT]
+```
+
+Check the p-value.
+
+```{r}
+high_block3_p <- high_block3_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
+reportObject <- reproCheck(reportedValue = "<.9", obtainedValue = high_block3_p, valueType = 'p', eyeballCheck = FALSE)
+```
+
+Note that this is a decision error in that they interpreted this test as a null p-value. 
+
+```{r}
+d_high_block4 <- expldt_tidy %>% filter(block == "4", p_reward == "1")
+an_high_block4 <- aov(block_exploration ~ yoked_condition, data = d_high_block4)
+high_block4_tuk <- TukeyHSD(an_high_block4, "yoked_condition") # we got p = .19 [NOT CONSISTENT]
+```
+
+Check the p-value.
+
+```{r}
+high_block4_p <- high_block4_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
+reportObject <- reproCheck(reportedValue = "<.9", obtainedValue = high_block4_p, valueType = 'p', eyeballCheck = FALSE)
+```
+
+## Step 5: Conclusion
+
+Unfortunately, this reproducability check is currently a failure. While we were able to reproduce the descriptive results presented in Figure 2, we were unable to reproduce the key 3-way interaction reported in the repeated measures ANOVA. Specifically, we were unable to reproduce both the degrees of freedom ($df_2=342$), the F-statistic ($F = 3.35$), nor the p value ($p < .01$). Moreover, we were unable to reproduce all of the p-values for the follow-up Tukey tests (3 out of 8). It would be useful to get the following clarifications from the authors:
+
+  * how did they specify the repeated measures ANOVA (any code would be great)
+  * the exact p values for all tests rather than the upper limits. 
+  * precisely what subsets of the data were used in each Tukey test.  
+
+```{r}
+Author_Assistance = FALSE # was author assistance provided? (if so, enter TRUE)
+
+Insufficient_Information_Errors <- 0 # how many discrete insufficient information issues did you encounter?
+
+# Assess the causal locus (discrete reproducibility issues) of any reproducibility errors. Note that there doesn't necessarily have to be a one-to-one correspondance between discrete reproducibility issues and reproducibility errors. For example, it could be that the original article neglects to mention that a Greenhouse-Geisser correct was applied to ANOVA outcomes. This might result in multiple reproducibility errors, but there is a single causal locus (discrete reproducibility issue).
+
+locus_typo <- NA # how many discrete issues did you encounter that related to typographical errors?
+locus_specification <- NA # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
+locus_analysis <- NA # how many discrete issues did you encounter that related to errors in the authors' original analyses?
+locus_data <- NA # how many discrete issues did you encounter that related to errors in the data files shared by the authors?
+locus_unidentified <- NA # how many discrete issues were there for which you could not identify the cause
+
+Affects_Conclusion <- NA # Do any reproducibility issues encounter appear to affect the conclusions made in the original article? This is a subjective judgement, but you should taking into account multiple factors, such as the presence/absence of decision errors, the number of target outcomes that could not be reproduced, the type of outcomes that could or could not be reproduced, the difference in magnitude of effect sizes, and the predictions of the specific hypothesis under scrutiny.
+```
+
+```{r}
+reportObject <- reportObject %>%
+  filter(dummyRow == FALSE) %>% # remove the dummy row
+  select(-dummyRow) %>% # remove dummy row designation
+  mutate(articleID = articleID) %>% # add the articleID 
+  select(articleID, everything()) # make articleID first column
+
+# decide on final outcome
+if(any(reportObject$comparisonOutcome != "MATCH") | Insufficient_Information_Errors > 0){
+  finalOutcome <- "Failure without author assistance"
+  if(Author_Assistance == T){
+    finalOutcome <- "Failure despite author assistance"
+  }
+}else{
+  finalOutcome <- "Success without author assistance"
+  if(Author_Assistance == T){
+    finalOutcome <- "Success with author assistance"
+  }
+}
+
+# collate report extra details
+reportExtras <- data.frame(articleID, pilotNames, copilotNames, pilotTTC, copilotTTC, pilotStartDate, copilotStartDate, completionDate, Author_Assistance, finalOutcome, Insufficient_Information_Errors, locus_typo, locus_specification, locus_analysis, locus_data, locus_unidentified)
+
+# save report objects
+if(reportType == "pilot"){
+  write_csv(reportObject, "pilotReportDetailed.csv")
+  write_csv(reportExtras, "pilotReportExtras.csv")
+}
+
+if(reportType == "final"){
+  write_csv(reportObject, "finalReportDetailed.csv")
+  write_csv(reportExtras, "finalReportExtras.csv")
+}
+```
+
+# Session information
+
+```{r session_info, include=TRUE, echo=TRUE, results='markup'}
+devtools::session_info()
+```
