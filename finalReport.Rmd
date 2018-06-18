@@ -8,7 +8,7 @@ output:
 
 ```{r}
 articleID <- "3-10-2014_PS" # insert the article ID code here e.g., "10-3-2015_PS"
-reportType <- 'pilot'
+reportType <- 'final'
 pilotNames <- "Gobi, Marc" # insert the pilot's name here e.g., "Tom Hardwicke". If there are multiple pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
 copilotNames <- "Kyle MacDonald" # insert the co-pilot's name here e.g., "Michael Frank". If there are multiple co-pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
 pilotTTC <- 720 # insert the pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
@@ -38,7 +38,7 @@ A direct measure of perceived controllability was found by surveying participant
 
 Here is the top row of Figure 2. Note that error bars represent represent ±1 SEM. And that points show the mean percentage of trials on which participants tried new keys.
 
-![](fig2_top_row.png)
+![](img/fig2_top_row.png)
 
 ------
 
@@ -99,7 +99,6 @@ expldt_tidy <- expldt_tidy %>%
          yoked_condition = factor(yoked_condition)) 
 ```
 
-
 Check how many participants we have in each condition. From the Participants section, 
 
 > One hundred twenty Technion students (52 female, 68 male; average age = 24 years).
@@ -119,7 +118,7 @@ expldt_tidy %>%
   kable()
 ```
 
-We can reproduce the number of participants in each condition and reward freqency condition. 
+We can reproduce the number of participants in each condition and reward frequency condition. 
 
 ## Step 4: Run analysis
 
@@ -151,7 +150,87 @@ ms %>%
         panel.border = element_rect(colour = "grey", fill=NA, size=1))
 ```
 
-Our plot looks pretty spot on when compared to the top row of Figure 2. 
+Our plot looks pretty spot on when compared to the top row of Figure 2:
+
+![](img/fig2_top_row.png)
+
+```{r}
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[1,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[1,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[2,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[2,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[3,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[3,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[4,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[4,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[5,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[5,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[6,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[6,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[7,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[7,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[8,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[8,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[9,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[9,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[10,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[10,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[11,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[11,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[12,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[12,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[13,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[13,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[14,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[14,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[15,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[15,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[1,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[1,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[16,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[16,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[17,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[17,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[18,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[18,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[19,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[19,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[20,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[20,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[21,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[21,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[22,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[22,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[23,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[23,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[24,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[24,]$sem, valueType = 'se', eyeballCheck = TRUE)
+```
+
 
 ### Inferential statistics
 
@@ -226,9 +305,7 @@ Next, we try to reproduce the post hoc Tukey tests. From the paper,
 
 > A post hoc Tukey’s test of exploration rates in the two control groups revealed that when the frequency of rewards from exploration was extremely low (p = .1), exploration rates decreased from about 70% in the first block to approximately 40% in the last block for both the with-control (p < .01) and the yoked (p < .01) groups. 
 
-We followed this [resource](https://www.r-bloggers.com/anova-and-tukeys-test-on-r/) to understand how to do Tukey tests to evaluate pairwise differences. We select the observations of interest and run an an anova and a tukey test.
-
-NOTE ACTUAL EXPLORATION RATES UNDER SPECIFIC BLOCK/P_REWARD/CONDITION CONFIGURATIONS WERE ALL CONSISTENT WITH THE ARTICLE AS PER THE DESCRIPTIVE STATISTICS SECTION (we confirmed all Fig 2 row 1 data points), so in the following we ONLY discuss p values of the TUKEY results.
+We followed this [resource](https://www.r-bloggers.com/anova-and-tukeys-test-on-r/). We select the observations of interest and run an anova and a tukey test.
 
 ```{r}
 d_low_control <- expldt_tidy %>% filter(yoked_condition == "with_control", p_reward == "0.1")
@@ -357,10 +434,9 @@ reportObject <- reproCheck(reportedValue = "<.9", obtainedValue = high_block4_p,
 
 ## Step 5: Conclusion
 
-Unfortunately, this reproducability check is currently a failure. While we were able to reproduce the descriptive results presented in Figure 2, we were unable to reproduce the key 3-way interaction reported in the repeated measures ANOVA. Specifically, we were unable to reproduce both the degrees of freedom ($df_2=342$), the F-statistic ($F = 3.35$), nor the p value ($p < .01$). Moreover, we were unable to reproduce all of the p-values for the follow-up Tukey tests (3 out of 8). It would be useful to get the following clarifications from the authors:
+Unfortunately, our initial attempts to reproduce the target outcomes were not successful. While we were able to reproduce the descriptive results presented in Figure 2, we were unable to reproduce the key 3-way interaction reported in the repeated measures ANOVA. Specifically, we were unable to reproduce neither the degrees of freedom ($df_2=342$), the F-statistic ($F = 3.35$), nor the p value ($p < .01$). Moreover, we were unable to reproduce all of the p-values for the follow-up Tukey tests (3 out of 8). It would be useful to get the following clarifications from the authors:
 
   * how did they specify the repeated measures ANOVA (any code would be great)
-  * the exact p values for all tests rather than the upper limits. 
   * precisely what subsets of the data were used in each Tukey test.  
 
 ```{r}
