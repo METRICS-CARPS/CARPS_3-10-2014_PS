@@ -250,8 +250,8 @@ completionDate &lt;- as.Date(&quot;&quot;, format = &quot;%m/%d/%y&quot;) # copi
 </div>
 <hr />
 </div>
-<div id="step-1-load-packages" class="section level2">
-<h2>Step 1: Load packages</h2>
+<div id="step-1-load-packages" class="section level1">
+<h1>Step 1: Load packages</h1>
 <pre class="r"><code>library(tidyverse) # for data munging
 library(knitr) # for kable table formating
 library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
@@ -261,8 +261,8 @@ library(car)</code></pre>
 <pre class="r"><code># Prepare report object. This will be updated automatically by the reproCheck function each time values are compared.
 reportObject &lt;- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)</code></pre>
 </div>
-<div id="step-2-load-data" class="section level2">
-<h2>Step 2: Load data</h2>
+<div id="step-2-load-data" class="section level1">
+<h1>Step 2: Load data</h1>
 <pre class="r"><code>expldt = read_excel('data/LH_model_predictions_and_experimental_results.xlsx', 
                     col_names = TRUE) %&gt;% 
   rename(&quot;p_reward&quot; = &quot;P(reward)&quot;, 
@@ -272,8 +272,8 @@ reportObject &lt;- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue
          &quot;3&quot;=&quot;Exploration Rates_Block3&quot;, 
          &quot;4&quot;=&quot;Exploration Rates_Block4&quot;)</code></pre>
 </div>
-<div id="step-3-tidy-data" class="section level2">
-<h2>Step 3: Tidy data</h2>
+<div id="step-3-tidy-data" class="section level1">
+<h1>Step 3: Tidy data</h1>
 <pre class="r"><code>expldt_tidy = expldt %&gt;% gather(block, block_exploration, &quot;1&quot;:&quot;4&quot;) 
 expldt_tidy = na.omit(expldt_tidy)</code></pre>
 <p>Change 1/0s to meaningful condition names.</p>
@@ -344,10 +344,10 @@ expldt_tidy = na.omit(expldt_tidy)</code></pre>
 </table>
 <p>We can reproduce the number of participants in each condition and reward frequency condition.</p>
 </div>
-<div id="step-4-run-analysis" class="section level2">
-<h2>Step 4: Run analysis</h2>
-<div id="descriptive-statistics" class="section level3">
-<h3>Descriptive statistics</h3>
+<div id="step-4-run-analysis" class="section level1">
+<h1>Step 4: Run analysis</h1>
+<div id="descriptive-statistics" class="section level2">
+<h2>Descriptive statistics</h2>
 <pre class="r"><code>ms &lt;- expldt_tidy %&gt;% 
   group_by(yoked_condition, p_reward, block) %&gt;% 
   summarise(m = mean(block_exploration),
@@ -705,8 +705,8 @@ ms %&gt;% kable()</code></pre>
 <pre class="r"><code>reportObject &lt;- reproCheck(reportedValue = 'figure', obtainedValue = ms[24,]$sem, valueType = 'se', eyeballCheck = TRUE)</code></pre>
 <pre><code>## [1] &quot;MATCH for se. Eyeball comparison only.&quot;</code></pre>
 </div>
-<div id="inferential-statistics" class="section level3">
-<h3>Inferential statistics</h3>
+<div id="inferential-statistics" class="section level2">
+<h2>Inferential statistics</h2>
 <blockquote>
 <p>To further examine exploration rates, we conducted a 4 (block: 1, 2, 3, 4) × 3 (reward frequency: extremely low, moderate, extremely high) × 2 (control group: with-control, yoked) repeated measures analysis of variance (ANOVA), which revealed a significant three-way interaction, F(6, 342) = 3.35, p &lt; .01, ηp2 = .05.</p>
 </blockquote>
@@ -962,8 +962,8 @@ reportObject &lt;- reproCheck(reportedValue = &quot;&lt;.9&quot;, obtainedValue 
 <pre><code>## [1] &quot;EYEBALL CHECK ERROR for p. Eyeball comparison only.&quot;</code></pre>
 </div>
 </div>
-<div id="step-5-conclusion" class="section level2">
-<h2>Step 5: Conclusion</h2>
+<div id="step-5-conclusion" class="section level1">
+<h1>Step 5: Conclusion</h1>
 <p>Unfortunately, our initial attempts to reproduce the target outcomes were not successful. While we were able to reproduce the descriptive results presented in Figure 2, we were unable to reproduce the key 3-way interaction reported in the repeated measures ANOVA. Specifically, we were unable to reproduce neither the degrees of freedom (<span class="math inline">\(df_2=342\)</span>), the F-statistic (<span class="math inline">\(F = 3.35\)</span>), nor the p value (<span class="math inline">\(p &lt; .01\)</span>). Moreover, we were unable to reproduce all of the p-values for the follow-up Tukey tests (3 out of 8). It would be useful to get the following clarifications from the authors:</p>
 <ul>
 <li>how did they specify the repeated measures ANOVA (any code would be great)</li>
@@ -1032,7 +1032,7 @@ if(reportType == &quot;final&quot;){
 ##  language (EN)                        
 ##  collate  en_US.UTF-8                 
 ##  tz       America/Los_Angeles         
-##  date     2018-06-17                  
+##  date     2018-06-20                  
 ## 
 ##  package      * version  date      
 ##  assertthat     0.2.0    2017-04-11

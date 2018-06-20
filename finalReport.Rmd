@@ -46,7 +46,7 @@ Here is the top row of Figure 2. Note that error bars represent represent ±1 SE
 knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 ```
 
-## Step 1: Load packages
+# Step 1: Load packages
 
 ```{r}
 library(tidyverse) # for data munging
@@ -62,7 +62,7 @@ library(car)
 reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)
 ```
 
-## Step 2: Load data
+# Step 2: Load data
 
 ```{r}
 expldt = read_excel('data/LH_model_predictions_and_experimental_results.xlsx', 
@@ -75,7 +75,7 @@ expldt = read_excel('data/LH_model_predictions_and_experimental_results.xlsx',
          "4"="Exploration Rates_Block4")
 ```
 
-## Step 3: Tidy data
+# Step 3: Tidy data
 
 ```{r}
 expldt_tidy = expldt %>% gather(block, block_exploration, "1":"4") 
@@ -120,9 +120,9 @@ expldt_tidy %>%
 
 We can reproduce the number of participants in each condition and reward frequency condition. 
 
-## Step 4: Run analysis
+# Step 4: Run analysis
 
-### Descriptive statistics
+## Descriptive statistics
 
 ```{r}
 ms <- expldt_tidy %>% 
@@ -232,7 +232,7 @@ reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[24,]$sem
 ```
 
 
-### Inferential statistics
+## Inferential statistics
 
 > To further examine exploration rates, we conducted a 4 (block: 1, 2, 3, 4) × 3 (reward frequency: extremely low, moderate, extremely high) × 2 (control group: with-control, yoked) repeated measures analysis of variance (ANOVA), which revealed a significant three-way interaction, F(6, 342) = 3.35, p < .01, ηp2 = .05.
 
@@ -432,7 +432,7 @@ high_block4_p <- high_block4_tuk$yoked_condition %>% data.frame() %>% pull(p.adj
 reportObject <- reproCheck(reportedValue = "<.9", obtainedValue = high_block4_p, valueType = 'p', eyeballCheck = FALSE)
 ```
 
-## Step 5: Conclusion
+# Step 5: Conclusion
 
 Unfortunately, our initial attempts to reproduce the target outcomes were not successful. While we were able to reproduce the descriptive results presented in Figure 2, we were unable to reproduce the key 3-way interaction reported in the repeated measures ANOVA. Specifically, we were unable to reproduce neither the degrees of freedom ($df_2=342$), the F-statistic ($F = 3.35$), nor the p value ($p < .01$). Moreover, we were unable to reproduce all of the p-values for the follow-up Tukey tests (3 out of 8). It would be useful to get the following clarifications from the authors:
 
