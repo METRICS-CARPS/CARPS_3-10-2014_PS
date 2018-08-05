@@ -428,7 +428,7 @@ reportObject <- reproCheck(reportedValue = ".09", obtainedValue = mod_block4_tuk
                            valueType = 'p')
 ```
 
-We got a lower p-value (p = `r round(mod_block4_tuk$yoked_condition[4], 2)`) than the one reported in the paper ($p = .09$.
+We got a lower p-value (p = `r round(mod_block4_tuk$yoked_condition[4], 2)`) than the one reported in the paper ($p = .09$).
 
 The last Tukey tests focused on condition differences when reward frequency was high. From the paper,
 
@@ -491,7 +491,7 @@ We are unable to reproduce the p-value for the Block 4 comparison. We get $p =$ 
 
 # Step 5: Conclusion
 
-We were able to reproduce the descriptive results presented in Figure 2. After assitance from the author, we were mostly able to reproduce the key 3-way from the repeated measures ANOVA. Specifically, we able to reproduce the degrees of freedom and the p-value. However, we still found minor error numerical error in the F-statistic and a major numerical error with the $\eta^2$, although it was a 20% difference with small numbers. 
+We were able to reproduce the descriptive results presented in Figure 2. After assistance from the author, we were mostly able to reproduce the key 3-way from the repeated measures ANOVA. Specifically, we able to reproduce the degrees of freedom and the p-value. However, we still found minor error numerical error in the F-statistic and a major numerical error with the $\eta^2$, although it was a 20% difference with small numbers. 
 
 We only able to reproduce a subset of the follow-up Tukey tests. It would be useful to get the following clarifications from the authors:
 
