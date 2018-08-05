@@ -59,7 +59,10 @@ library(car)
 
 ```{r}
 # Prepare report object. This will be updated automatically by the reproCheck function each time values are compared.
-reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)
+reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, 
+                           obtainedValue = NA, valueType = NA, 
+                           percentageError = NA, comparisonOutcome = NA, 
+                           eyeballCheck = NA)
 ```
 
 # Step 2: Load data
@@ -155,292 +158,348 @@ Our plot looks pretty spot on when compared to the top row of Figure 2:
 ![](img/fig2_top_row.png)
 
 ```{r}
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[1,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[1,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[1,]$m, valueType = 'mean', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[2,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[2,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[1,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[3,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[3,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[2,]$m, valueType = 'mean', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[4,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[4,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[2,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[5,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[5,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[3,]$m, valueType = 'mean', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[6,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[6,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[3,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[7,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[7,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure',
+                           obtainedValue = ms[4,]$m, valueType = 'mean', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[8,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[8,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[4,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[9,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[9,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[5,]$m, valueType = 'mean', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[10,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[10,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[5,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[11,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[11,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[6,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[6,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[12,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[12,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[7,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[7,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[13,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[13,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[8,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[8,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[14,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[14,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[9,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[9,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[15,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[15,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[10,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[10,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[1,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[1,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[11,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[11,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[16,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[16,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[12,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[12,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[17,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[17,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[13,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[13,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[18,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[18,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[14,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[14,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[19,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[19,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[15,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[15,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[20,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[20,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[1,]$m, valueType = 'mean', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[1,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[21,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[21,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[16,]$m, valueType = 'mean', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[22,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[22,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[16,]$sem, valueType = 'se', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[23,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[23,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[17,]$m, valueType = 'mean', eyeballCheck = TRUE)
 
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[24,]$m, valueType = 'mean', eyeballCheck = TRUE)
-reportObject <- reproCheck(reportedValue = 'figure', obtainedValue = ms[24,]$sem, valueType = 'se', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[17,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[18,]$m, valueType = 'mean', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[18,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[19,]$m, valueType = 'mean', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[19,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure',
+                           obtainedValue = ms[20,]$m, valueType = 'mean', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[20,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[21,]$m, valueType = 'mean', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[21,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[22,]$m, valueType = 'mean', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[22,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure',
+                           obtainedValue = ms[23,]$m, valueType = 'mean', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[23,]$sem, valueType = 'se', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[24,]$m, valueType = 'mean', eyeballCheck = TRUE)
+
+reportObject <- reproCheck(reportedValue = 'figure', 
+                           obtainedValue = ms[24,]$sem, valueType = 'se', eyeballCheck = TRUE)
 ```
-
 
 ## Inferential statistics
 
 > To further examine exploration rates, we conducted a 4 (block: 1, 2, 3, 4) × 3 (reward frequency: extremely low, moderate, extremely high) × 2 (control group: with-control, yoked) repeated measures analysis of variance (ANOVA), which revealed a significant three-way interaction, F(6, 342) = 3.35, p < .01, ηp2 = .05.
 
 ```{r}
-m1 <- aov(block_exploration ~ factor(yoked_condition) * factor(block) * factor(p_reward) + Error(Subject/block), 
-          data = expldt_tidy)
-summary(m1)
+m1 <- ez::ezANOVA(data = expldt_tidy, 
+                  dv = block_exploration, 
+                  wid = Subject, 
+                  within = .(block_factor),
+                  between = .(yoked_condition, p_reward_factor), 
+                  detailed = TRUE,
+                  type = 3)
+
+m_output <- m1$ANOVA %>% mutate_if(is.numeric, round, digits = 4)
+
+m1_dfn <- m_output$DFn[8]
+m1_dfd <-  m_output$DFd[8]
+m1_f <-  m_output$F[8]
+m1_p <-  m_output$p[8]
+m1_pes <-  m_output$SSn[8] / m_output$SSd[8]
 ```
 
-For the key 3-way interaction, we get $F(6, 452) = 1.281, p > 0.1$.
-
-Try to fit with predictors coded as numeric. We tried this because we noticed that the between-group factor labels were numeric (p_reward: 0.2 0.1 1.0 and block: 1, 2, 3, 4).
+Add ANOVA values to report object:
 
 ```{r}
-m1_b <- aov(block_exploration ~ yoked * block * p_reward + Error(Subject/block), 
-          data = expldt_tidy)
-summary(m1_b)
+reportObject <- reproCheck(reportedValue = "6", obtainedValue = m1_dfn, valueType = 'df')
+reportObject <- reproCheck(reportedValue = "342", obtainedValue = m1_dfd, valueType = 'df')
+reportObject <- reproCheck(reportedValue = "3.35", obtainedValue = m1_f, valueType = 'F')
+reportObject <- reproCheck(reportedValue = "p < .01", obtainedValue = m1_p, valueType = 'p', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = ".05", obtainedValue = m1_pes, valueType = 'pes')
 ```
-
-Note that we now get a higher F-value ($F(6, 470) = 3.018, p = 0.08$), but it is still not below the $p < .05$ threshold.
-
-Next, we try to fit with lmer to see if we get any evidence of a 3-way interaction.
-
-```{r}
-m2 <- lme4::lmer(block_exploration ~ yoked_condition * block_factor * p_reward_factor + (Subject|block_factor),
-                 data = expldt_tidy)
-
-summary(m2)
-```
-
-Here are the resources we consulted when trying to reproduce the repeated measures ANOVA:
-
-  * https://stats.stackexchange.com/questions/62756/2x2x5-repeated-measures-anova-significant-3-way-interaction,
-  * https://www.statmethods.net/stats/anova.html
-  * https://www.statmethods.net/stats/anova.html (within subjects example)
-  * https://www.uvm.edu/~dhowell/StatPages/R/RepeatedMeasuresAnovaR.html,
-  * https://www.r-bloggers.com/two-way-anova-with-repeated-measures/,
-  * http://personality-project.org/r/r.guide/r.anova.html,
-  * https://gribblelab.wordpress.com/2009/03/09/repeated-measures-anova-using-r/ 
-  
-Our within-subjects anova implementation in R is consistent with the implementation presented in these articles. We also researched why our df2 is not matching theirs and it does not seem like $DF_2 = 342$ makes sense according to http://www.rondotsch.nl/degrees-of-freedom/. 
-
-Check DFs
-
-```{r}
-m_summary <- summary(m1)$`Error: Within`
-df1 <-  m_summary[[1]]$Df[7] %>% round(3)
-df2 <-  m_summary[[1]]$Df[8] %>% round(3)
-
-reportObject <- reproCheck(reportedValue = "6", obtainedValue = df1, valueType = 'df')
-reportObject <- reproCheck(reportedValue = "342", obtainedValue = df2, valueType = 'p')
-```
-
-Check F value
-
-```{r}
-reportObject <- reproCheck(reportedValue = "6", obtainedValue = df1, valueType = 'df')
-```
-
-Check p values
-
-```{r}
-three_way_p <- m_summary[[1]]$`Pr(>F)`[7] %>% round(3)
-reportObject <- reproCheck(reportedValue = ".01", obtainedValue = three_way_p, valueType = 'p')
-```
-
-Note that this was an "eyeball" check of the $p < .01$ that led to the decision error. 
 
 Next, we try to reproduce the post hoc Tukey tests. From the paper,
 
 > A post hoc Tukey’s test of exploration rates in the two control groups revealed that when the frequency of rewards from exploration was extremely low (p = .1), exploration rates decreased from about 70% in the first block to approximately 40% in the last block for both the with-control (p < .01) and the yoked (p < .01) groups. 
 
-We followed this [resource](https://www.r-bloggers.com/anova-and-tukeys-test-on-r/). We select the observations of interest and run an anova and a tukey test.
+```{r}
+post_hoc_ms <- expldt_tidy %>% 
+  filter(p_reward == "0.1") %>% 
+  group_by(block_factor, yoked_condition) %>% 
+  summarise(m = mean(block_exploration)) %>% 
+  mutate_if(is.numeric, funs(round(. * 100, 0)))
+
+post_hoc_ms %>% kable()
+```
+
+We are able to reproduce values that look "approximately" similar to the means reported for the post-hoc Tukey tests. Next, we try to reproduce the reported p-values.
 
 ```{r}
-d_low_control <- expldt_tidy %>% filter(yoked_condition == "with_control", p_reward == "0.1")
+d_low_control <- expldt_tidy %>% 
+  filter(yoked_condition == "with_control", 
+         p_reward == "0.1", block %in% c(1, 4))
+
 an_low_control <- aov(block_exploration ~ block_factor, data = d_low_control)
-low_control_tuk <- TukeyHSD(an_low_control, "block_factor") # we got p = .0125 [NOT CONSISTENT]
+low_control_tuk <- TukeyHSD(an_low_control) 
+
+reportObject <- reproCheck(reportedValue = "p < .01", obtainedValue = low_control_tuk$block_factor[4], 
+                           valueType = 'p', eyeballCheck = TRUE)
 ```
-
-Check the p-value comparing block 1 to 4.
-
-```{r}
-low_cont_p <- low_control_tuk$block_factor %>% data.frame() %>% pull(p.adj) %>% .[3] %>% round(4)
-reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = low_cont_p, valueType = 'p', eyeballCheck = FALSE)
-```
-
-Note that this is also a decision error since the obtained p-value (p = `r low_cont_p`) is above the reported $p < .01$ threshold.
 
 Next we do the same thing but with the yoked condition
 
 ```{r}
-d_low_yoked <- expldt_tidy %>% filter(yoked_condition == "yoked", p_reward == "0.1")
+d_low_yoked <- expldt_tidy %>% 
+  filter(yoked_condition == "yoked",
+         p_reward == "0.1", block %in% c(1, 4))
+
 an_low_yoked <- aov(block_exploration ~ block_factor, data = d_low_yoked)
-low_yoked_tuk <- TukeyHSD(an_low_yoked, "block_factor") # we got p = .1056 [NOT CONSISTENT]
+low_yoked_tuk <- TukeyHSD(an_low_yoked, "block_factor") 
+
+reportObject <- reproCheck(reportedValue = "p < .01", obtainedValue = low_yoked_tuk$block_factor[4], 
+                           valueType = 'p', eyeballCheck = FALSE)
 ```
 
-Check the p-value comparing block 1 to 4.
-
-```{r}
-low_yoked_p <- low_yoked_tuk$block_factor %>% data.frame() %>% pull(p.adj) %>% .[3] %>% round(4)
-reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = low_yoked_p, valueType = 'p', eyeballCheck = FALSE)
-```
+We are unable to reproduce the repored p value ($p < .01$) for the yoked condition. We get `r round(low_yoked_tuk$block_factor[4], 3)`.
 
 Next, we do the same analysis but focusing on differences between yoked-control in the moderate reward frequency and block. From the paper,
 
 > However, when reward frequency was moderate (p = .2), with-control participants continued to explore in about 70% of the trials, whereas yoked participants reduced their exploration rates to approximately 40%. This difference between the groups was evident in the second block (p < .01) and remained after yoked participants regained control (p < .01 and p = .09 for the third and fourth blocks, respectively).
 
 ```{r}
-d_mod_block2 <- expldt_tidy %>% filter(block == "2", p_reward == "0.2")
-an_mod_block2 <- aov(block_exploration ~ yoked_condition, data = d_mod_block2)
-mod_block_tuk <- TukeyHSD(an_mod_block2, "yoked_condition") # we got p < .01 [CONSISTENT]
+d_moderate <- expldt_tidy %>% filter(p_reward == "0.2")
+
+post_hoc_ms_mod <- d_moderate %>% 
+  group_by(block_factor, yoked_condition) %>% 
+  summarise(m = mean(block_exploration)) %>% 
+  mutate_if(is.numeric, funs(round(. * 100, 0)))
+
+post_hoc_ms_mod %>% kable()
 ```
 
-Check the p-value.
+Next, run the Tukey tests. 
 
 ```{r}
-mod_block_p <- mod_block_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
-reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = mod_block_p, valueType = 'p', eyeballCheck =  TRUE)
+an_mod_block2 <- d_moderate %>% 
+  filter(block == 2) %>% 
+  aov(block_exploration ~ yoked_condition, data = .)
+
+mod_block_tuk <- TukeyHSD(an_mod_block2) 
+
+reportObject <- reproCheck(reportedValue = "p < .01", obtainedValue = mod_block_tuk$yoked_condition[4], 
+                           valueType = 'p', eyeballCheck =  TRUE)
 ```
 
-Next, we do the same analysis but focusing on block 3..
+Next, we do the same analysis but focusing on Block 3.
 
 ```{r}
-d_mod_block3 <- expldt_tidy %>% filter(block == "3", p_reward == "0.2")
-an_mod_block3 <- aov(block_exploration ~ yoked_condition, data = d_mod_block3)
-mod_block3_tuk <- TukeyHSD(an_mod_block3, "yoked_condition") # we got p < .01 [CONSISTENT]
-```
+an_mod_block3 <- d_moderate %>% 
+  filter(block == 3) %>% 
+  aov(block_exploration ~ yoked_condition, data = .)
 
-Check p-value.
+mod_block3_tuk <- TukeyHSD(an_mod_block3) 
 
-```{r}
-mod_block3_p <- mod_block3_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
-reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = mod_block3_p, valueType = 'p', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = mod_block3_tuk$yoked_condition[4], 
+                           valueType = 'p', eyeballCheck = TRUE)
 ```
 
 Same analysis, but with block 4. 
 
 ```{r}
-d_mod_block4 <- expldt_tidy %>% filter(block == "4", p_reward == "0.2")
-an_mod_block4 <- aov(block_exploration ~ yoked_condition, data = d_mod_block4) 
-mod_block4_tuk <- TukeyHSD(an_mod_block4, "yoked_condition") # we got p = .019 [NOT CONSISTENT]
+an_mod_block4 <- d_moderate %>% 
+  filter(block == 4) %>% 
+  aov(block_exploration ~ yoked_condition, data = .)
+
+mod_block4_tuk <- TukeyHSD(an_mod_block4)
+
+reportObject <- reproCheck(reportedValue = ".09", obtainedValue = mod_block4_tuk$yoked_condition[4], 
+                           valueType = 'p')
 ```
 
-Check p-value
-
-```{r}
-mod_block4_p <- mod_block4_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
-reportObject <- reproCheck(reportedValue = ".09", obtainedValue = mod_block4_p, valueType = 'p')
-```
-
+We got a lower p-value (p = `r round(mod_block4_tuk$yoked_condition[4], 2)`) than the one reported in the paper ($p = .09$.
 
 The last Tukey tests focused on condition differences when reward frequency was high. From the paper,
 
 > Finally, when reward frequency was extremely high (p = 1), yoked participants explored less than with-control participants in the second block (p < .01); however, this gap disappeared immediately after yoked participants regained control (ps > .9 for the third and fourth blocks). In summary, the classic learned-helplessness pattern was observed only when the reward frequency was moderate.
 
 ```{r}
-d_high_block2 <- expldt_tidy %>% filter(block == "2", p_reward == "1")
-an_high_block2 <- aov(block_exploration ~ yoked_condition, data = d_high_block2)
-high_block2_tuk <- TukeyHSD(an_high_block2, "yoked_condition") # we got p < .01 [CONSISTENT]
+d_high <- expldt_tidy %>% filter(p_reward == 1)
+
+post_hoc_ms_high <- d_high %>% 
+  group_by(block_factor, yoked_condition) %>% 
+  summarise(m = mean(block_exploration)) %>% 
+  mutate_if(is.numeric, funs(round(. * 100, 0)))
+
+post_hoc_ms_high %>% kable()
 ```
 
-Check the p-value.
+Next, we try to reproduce the p-values.
 
 ```{r}
-high_block2_p <- high_block2_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
-reportObject <- reproCheck(reportedValue = "<.01", obtainedValue = high_block2_p, valueType = 'p', eyeballCheck = TRUE)
+an_high_block2 <- d_high %>% 
+  filter(block == 2) %>% 
+  aov(block_exploration ~ yoked_condition, data = .)
+
+high_block2_tuk <- TukeyHSD(an_high_block2)
+
+reportObject <- reproCheck(reportedValue = "p < .01", 
+                           obtainedValue = high_block2_tuk$yoked_condition[4], 
+                           valueType = 'p', eyeballCheck = TRUE)
 ```
 
 Same condition comparison, but with block 3
 
 ```{r}
-d_high_block3 <- expldt_tidy %>% filter(block == "3", p_reward == "1")
-an_high_block3 <- aov(block_exploration ~ yoked_condition, data = d_high_block3)
-high_block3_tuk <- TukeyHSD(an_high_block3, "yoked_condition") # we got p < .01 [NOT CONSISTENT]
+an_high_block3 <- d_high %>% 
+  filter(block == 3) %>% 
+  aov(block_exploration ~ yoked_condition, data = .)
+
+high_block3_tuk <- TukeyHSD(an_high_block3)
+
+reportObject <- reproCheck(reportedValue = "p > .9", 
+                           obtainedValue = high_block3_tuk$yoked_condition[4], 
+                           valueType = 'p', eyeballCheck = FALSE)
 ```
 
-Check the p-value.
+We are unable to reproduce the p-value for the Block 3 comparison. We get $p < .05$. Note that this is a decision error in that they interpreted this test as a null p-value. 
 
 ```{r}
-high_block3_p <- high_block3_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
-reportObject <- reproCheck(reportedValue = "<.9", obtainedValue = high_block3_p, valueType = 'p', eyeballCheck = FALSE)
+an_high_block4 <- d_high %>% 
+  filter(block == 4) %>% 
+  aov(block_exploration ~ yoked_condition, data = .)
+
+high_block4_tuk <- TukeyHSD(an_high_block4)
+
+reportObject <- reproCheck(reportedValue = "p > .9", 
+                           obtainedValue = high_block4_tuk$yoked_condition[4], 
+                           valueType = 'p', eyeballCheck = FALSE)
 ```
 
-Note that this is a decision error in that they interpreted this test as a null p-value. 
-
-```{r}
-d_high_block4 <- expldt_tidy %>% filter(block == "4", p_reward == "1")
-an_high_block4 <- aov(block_exploration ~ yoked_condition, data = d_high_block4)
-high_block4_tuk <- TukeyHSD(an_high_block4, "yoked_condition") # we got p = .19 [NOT CONSISTENT]
-```
-
-Check the p-value.
-
-```{r}
-high_block4_p <- high_block4_tuk$yoked_condition %>% data.frame() %>% pull(p.adj) %>% .[1] 
-reportObject <- reproCheck(reportedValue = "<.9", obtainedValue = high_block4_p, valueType = 'p', eyeballCheck = FALSE)
-```
+We are unable to reproduce the p-value for the Block 4 comparison. We get $p =$ `r round(high_block4_tuk$yoked_condition[4], 2)`. Note that this is NOT a decision error because the p-value is still above the p < .05 threshold.
 
 # Step 5: Conclusion
 
-Unfortunately, our initial attempts to reproduce the target outcomes were not successful. While we were able to reproduce the descriptive results presented in Figure 2, we were unable to reproduce the key 3-way interaction reported in the repeated measures ANOVA. Specifically, we were unable to reproduce neither the degrees of freedom ($df_2=342$), the F-statistic ($F = 3.35$), nor the p value ($p < .01$). Moreover, we were unable to reproduce all of the p-values for the follow-up Tukey tests (3 out of 8). It would be useful to get the following clarifications from the authors:
+We were able to reproduce the descriptive results presented in Figure 2. After assitance from the author, we were mostly able to reproduce the key 3-way from the repeated measures ANOVA. Specifically, we able to reproduce the degrees of freedom and the p-value. However, we still found minor error numerical error in the F-statistic and a major numerical error with the $\eta^2$, although it was a 20% difference with small numbers. 
 
-  * how did they specify the repeated measures ANOVA (any code would be great)
-  * precisely what subsets of the data were used in each Tukey test.  
+We only able to reproduce a subset of the follow-up Tukey tests. It would be useful to get the following clarifications from the authors:
+
+  * calculation that they used for the $\eta^2$ value in the repeated measures ANOVA
+  * precisely what subsets of the data were used for each p-value reported in the follow-up Tukey tests
 
 ```{r}
-Author_Assistance = FALSE # was author assistance provided? (if so, enter TRUE)
+Author_Assistance = TRUE # was author assistance provided? (if so, enter TRUE)
 
 Insufficient_Information_Errors <- 0 # how many discrete insufficient information issues did you encounter?
 
