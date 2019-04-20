@@ -344,7 +344,28 @@ post_hoc_ms <- expldt_tidy %>%
 post_hoc_ms %>% kable()
 ```
 
-We are able to reproduce values that look "approximately" similar to the means reported for the post-hoc Tukey tests. Next, we try to reproduce the reported p-values.
+We are able to reproduce values that look approximately similar to the means reported for the post-hoc Tukey tests. 
+
+```{r}
+
+wc_m_1 <- post_hoc_ms %>% filter(block_factor == 1, yoked_condition == "with_control") %>% pull(m)
+
+reportObject <- reproCheck(reportedValue = "about 70", obtainedValue = wc_m_1, valueType = 'mean', eyeballCheck = TRUE)
+
+y_m_1 <- post_hoc_ms %>% filter(block_factor == 1, yoked_condition == "yoked") %>% pull(m)
+
+reportObject <- reproCheck(reportedValue = "about 70", obtainedValue = y_m_1, valueType = 'mean', eyeballCheck = TRUE)
+
+wc_m_4 <- post_hoc_ms %>% filter(block_factor == 4, yoked_condition == "with_control") %>% pull(m)
+
+reportObject <- reproCheck(reportedValue = "approximately 40", obtainedValue = wc_m_4, valueType = 'mean', eyeballCheck = TRUE)
+
+y_m_4 <- post_hoc_ms %>% filter(block_factor == 4, yoked_condition == "yoked") %>% pull(m)
+
+reportObject <- reproCheck(reportedValue = "approximately 40", obtainedValue = y_m_4, valueType = 'mean', eyeballCheck = TRUE)
+```
+
+Next, we try to reproduce the reported p-values.
 
 ```{r}
 d_low_control <- expldt_tidy %>% 
@@ -354,8 +375,7 @@ d_low_control <- expldt_tidy %>%
 an_low_control <- aov(block_exploration ~ block_factor, data = d_low_control)
 low_control_tuk <- TukeyHSD(an_low_control) 
 
-reportObject <- reproCheck(reportedValue = "p < .01", obtainedValue = low_control_tuk$block_factor[4], 
-                           valueType = 'p', eyeballCheck = TRUE)
+reportObject <- reproCheck(reportedValue = "p < .01", obtainedValue = low_control_tuk$block_factor[4], valueType = 'p', eyeballCheck = TRUE)
 ```
 
 Next we do the same thing but with the yoked condition
@@ -387,6 +407,26 @@ post_hoc_ms_mod <- d_moderate %>%
   mutate_if(is.numeric, funs(round(. * 100, 0)))
 
 post_hoc_ms_mod %>% kable()
+```
+
+We are able to reproduce values that look approximately similar to the means reported for the post-hoc Tukey tests. 
+
+```{r}
+wc_m_1 <- post_hoc_ms_mod %>% filter(block_factor == 1, yoked_condition == "with_control") %>% pull(m)
+
+reportObject <- reproCheck(reportedValue = "about 70", obtainedValue = wc_m_1, valueType = 'mean', eyeballCheck = TRUE)
+
+y_m_1 <- post_hoc_ms_mod %>% filter(block_factor == 1, yoked_condition == "yoked") %>% pull(m)
+
+reportObject <- reproCheck(reportedValue = "about 70", obtainedValue = y_m_1, valueType = 'mean', eyeballCheck = TRUE)
+
+wc_m_4 <- post_hoc_ms_mod %>% filter(block_factor == 4, yoked_condition == "with_control") %>% pull(m)
+
+reportObject <- reproCheck(reportedValue = "about 70", obtainedValue = wc_m_4, valueType = 'mean', eyeballCheck = TRUE)
+
+y_m_4 <- post_hoc_ms_mod %>% filter(block_factor == 4, yoked_condition == "yoked") %>% pull(m)
+
+reportObject <- reproCheck(reportedValue = "approximately 40", obtainedValue = y_m_4, valueType = 'mean', eyeballCheck = TRUE)
 ```
 
 Next, run the Tukey tests. 
@@ -491,17 +531,19 @@ We are unable to reproduce the p-value for the Block 4 comparison. We get $p =$ 
 
 # Step 5: Conclusion
 
-We were able to reproduce the descriptive results presented in Figure 2. After assistance from the author, we were mostly able to reproduce the key 3-way from the repeated measures ANOVA. Specifically, we able to reproduce the degrees of freedom and the p-value. However, we still found minor error numerical error in the F-statistic and a major numerical error with the $\eta^2$, although it was a 20% difference with small numbers. 
+We were able to reproduce the descriptive results presented in Figure 2. After assistance from the author, we were mostly able to reproduce the key 3-way interaction from the repeated measures ANOVA. Specifically, we able to reproduce the degrees of freedom and the p-value. However, we still found a minor error numerical error in the F-statistic and a major numerical error with the $\eta^2$ (although it was a 20% difference with small numbers). 
 
-We only able to reproduce a subset of the follow-up Tukey tests. It would be useful to get the following clarifications from the authors:
+We were only able to reproduce a subset of the follow-up Tukey tests. It would be useful to get the following clarifications from the authors:
 
   * calculation that they used for the $\eta^2$ value in the repeated measures ANOVA
   * precisely what subsets of the data were used for each p-value reported in the follow-up Tukey tests
+  
+We contacted the authors for clarification of these final issues but have not had a response after > 7 months. Therefore we are coding two insufficient information errors.
 
 ```{r}
 Author_Assistance = TRUE # was author assistance provided? (if so, enter TRUE)
 
-Insufficient_Information_Errors <- 0 # how many discrete insufficient information issues did you encounter?
+Insufficient_Information_Errors <- 2 # how many discrete insufficient information issues did you encounter?
 
 # Assess the causal locus (discrete reproducibility issues) of any reproducibility errors. Note that there doesn't necessarily have to be a one-to-one correspondance between discrete reproducibility issues and reproducibility errors. For example, it could be that the original article neglects to mention that a Greenhouse-Geisser correct was applied to ANOVA outcomes. This might result in multiple reproducibility errors, but there is a single causal locus (discrete reproducibility issue).
 
@@ -509,16 +551,16 @@ locus_typo <- NA # how many discrete issues did you encounter that related to ty
 locus_specification <- NA # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
 locus_analysis <- NA # how many discrete issues did you encounter that related to errors in the authors' original analyses?
 locus_data <- NA # how many discrete issues did you encounter that related to errors in the data files shared by the authors?
-locus_unidentified <- NA # how many discrete issues were there for which you could not identify the cause
+locus_unidentified <- 2 # how many discrete issues were there for which you could not identify the cause
 
 # How many of the above issues were resolved through author assistance?
 locus_typo_resolved <- NA # how many discrete issues did you encounter that related to typographical errors?
-locus_specification_resolved <- NA # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
+locus_specification_resolved <- 1 # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
 locus_analysis_resolved <- NA # how many discrete issues did you encounter that related to errors in the authors' original analyses?
 locus_data_resolved <- NA # how many discrete issues did you encounter that related to errors in the data files shared by the authors?
 locus_unidentified_resolved <- NA # how many discrete issues were there for which you could not identify the cause
 
-Affects_Conclusion <- NA # Do any reproducibility issues encounter appear to affect the conclusions made in the original article? This is a subjective judgement, but you should taking into account multiple factors, such as the presence/absence of decision errors, the number of target outcomes that could not be reproduced, the type of outcomes that could or could not be reproduced, the difference in magnitude of effect sizes, and the predictions of the specific hypothesis under scrutiny.
+Affects_Conclusion <- TRUE # Do any reproducibility issues encounter appear to affect the conclusions made in the original article? This is a subjective judgement, but you should taking into account multiple factors, such as the presence/absence of decision errors, the number of target outcomes that could not be reproduced, the type of outcomes that could or could not be reproduced, the difference in magnitude of effect sizes, and the predictions of the specific hypothesis under scrutiny.
 ```
 
 ```{r}

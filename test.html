@@ -1168,16 +1168,16 @@ reportObject &lt;- reproCheck(reportedValue = &quot;p &gt; .9&quot;,
 </div>
 <div id="step-5-conclusion" class="section level1">
 <h1>Step 5: Conclusion</h1>
-<p>We were able to reproduce the descriptive results presented in Figure 2. After assistance from the author, we were mostly able to reproduce the key 3-way interaction from the repeated measures ANOVA. Specifically, we able to reproduce the degrees of freedom and the p-value. However, we still found a minor error numerical error in the F-statistic and a major numerical error with the <span class="math inline">\(\eta^2\)</span> (although it was a 20% difference with small numbers).</p>
-<p>We were only able to reproduce a subset of the follow-up Tukey tests. It would be useful to get the following clarifications from the authors:</p>
+<p>We were able to reproduce the descriptive results presented in Figure 2. After assistance from the author, we were mostly able to reproduce the key 3-way from the repeated measures ANOVA. Specifically, we able to reproduce the degrees of freedom and the p-value. However, we still found minor error numerical error in the F-statistic and a major numerical error with the <span class="math inline">\(\eta^2\)</span>, although it was a 20% difference with small numbers.</p>
+<p>We only able to reproduce a subset of the follow-up Tukey tests. It would be useful to get the following clarifications from the authors:</p>
 <ul>
 <li>calculation that they used for the <span class="math inline">\(\eta^2\)</span> value in the repeated measures ANOVA</li>
 <li>precisely what subsets of the data were used for each p-value reported in the follow-up Tukey tests</li>
 </ul>
-<p>We contacted the authors for clarification of these final issues but have not had a response after &gt; 7 months. Therefore we are coding two insufficient information errors.</p>
+<p>We contacted the authors for clarification of these final issues but have not had a response after &gt; 7 months.</p>
 <pre class="r"><code>Author_Assistance = TRUE # was author assistance provided? (if so, enter TRUE)
 
-Insufficient_Information_Errors &lt;- 2 # how many discrete insufficient information issues did you encounter?
+Insufficient_Information_Errors &lt;- 0 # how many discrete insufficient information issues did you encounter?
 
 # Assess the causal locus (discrete reproducibility issues) of any reproducibility errors. Note that there doesn't necessarily have to be a one-to-one correspondance between discrete reproducibility issues and reproducibility errors. For example, it could be that the original article neglects to mention that a Greenhouse-Geisser correct was applied to ANOVA outcomes. This might result in multiple reproducibility errors, but there is a single causal locus (discrete reproducibility issue).
 
@@ -1185,16 +1185,16 @@ locus_typo &lt;- NA # how many discrete issues did you encounter that related to
 locus_specification &lt;- NA # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
 locus_analysis &lt;- NA # how many discrete issues did you encounter that related to errors in the authors' original analyses?
 locus_data &lt;- NA # how many discrete issues did you encounter that related to errors in the data files shared by the authors?
-locus_unidentified &lt;- 2 # how many discrete issues were there for which you could not identify the cause
+locus_unidentified &lt;- NA # how many discrete issues were there for which you could not identify the cause
 
 # How many of the above issues were resolved through author assistance?
 locus_typo_resolved &lt;- NA # how many discrete issues did you encounter that related to typographical errors?
-locus_specification_resolved &lt;- 1 # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
+locus_specification_resolved &lt;- NA # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
 locus_analysis_resolved &lt;- NA # how many discrete issues did you encounter that related to errors in the authors' original analyses?
 locus_data_resolved &lt;- NA # how many discrete issues did you encounter that related to errors in the data files shared by the authors?
 locus_unidentified_resolved &lt;- NA # how many discrete issues were there for which you could not identify the cause
 
-Affects_Conclusion &lt;- TRUE # Do any reproducibility issues encounter appear to affect the conclusions made in the original article? This is a subjective judgement, but you should taking into account multiple factors, such as the presence/absence of decision errors, the number of target outcomes that could not be reproduced, the type of outcomes that could or could not be reproduced, the difference in magnitude of effect sizes, and the predictions of the specific hypothesis under scrutiny.</code></pre>
+Affects_Conclusion &lt;- NA # Do any reproducibility issues encounter appear to affect the conclusions made in the original article? This is a subjective judgement, but you should taking into account multiple factors, such as the presence/absence of decision errors, the number of target outcomes that could not be reproduced, the type of outcomes that could or could not be reproduced, the difference in magnitude of effect sizes, and the predictions of the specific hypothesis under scrutiny.</code></pre>
 <pre class="r"><code>reportObject &lt;- reportObject %&gt;%
   filter(dummyRow == FALSE) %&gt;% # remove the dummy row
   select(-dummyRow) %&gt;% # remove dummy row designation
