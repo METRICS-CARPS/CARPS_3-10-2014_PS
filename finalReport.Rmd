@@ -513,7 +513,7 @@ reportObject <- reproCheck(reportedValue = "p > .9",
                            valueType = 'p', eyeballCheck = FALSE)
 ```
 
-We are unable to reproduce the p-value for the Block 3 comparison. We get $p < .05$. Note that this is a decision error in that they interpreted this test as a null p-value. 
+We are unable to reproduce the p-value for the Block 3 comparison. We get $p < .05$. Note that this is a decision error in that they interpreted this test as a non-significant p-value. 
 
 ```{r}
 an_high_block4 <- d_high %>% 
@@ -531,7 +531,7 @@ We are unable to reproduce the p-value for the Block 4 comparison. We get $p =$ 
 
 # Step 5: Conclusion
 
-We were able to reproduce the descriptive results presented in Figure 2. After assistance from the author, we were mostly able to reproduce the key 3-way interaction from the repeated measures ANOVA. Specifically, we able to reproduce the degrees of freedom and the p-value. However, we still found a minor error numerical error in the F-statistic and a major numerical error with the $\eta^2$ (although it was a 20% difference with small numbers). 
+We were able to reproduce the descriptive results presented in Figure 2 but encountered problems reproducing the inferential statistics. After receiving a more specific analysis specification from the author, we were mostly able to reproduce the key 3-way interaction from the repeated measures ANOVA. Specifically, we able to reproduce the degrees of freedom and the p-value. However, we still found a minor error numerical error in the F-statistic and a major numerical error with the $\eta^2$ (although it was a 20% difference with small numbers). 
 
 We were only able to reproduce a subset of the follow-up Tukey tests. It would be useful to get the following clarifications from the authors:
 
